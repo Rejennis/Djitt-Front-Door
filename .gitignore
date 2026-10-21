@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+playwright-report/
+test-results/
+.playwright/
+.DS_Store
+website/test-results/
+website/playwright-report/
+website - Copy/
+websitebackup/
+website BAckupB4TestAutomation/

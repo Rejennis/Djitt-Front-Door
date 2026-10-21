@@ -1,0 +1,817 @@
+# DJITT Enterprise Automation Testing Framework
+
+The goal is to establish a **reusable testing system that automatically checks every DJITT application before deployment, after deployment, and whenever important functionality changes**.
+
+For DJITT Website Factory, this means testing every generated website, its forms, mobile layouts, integrations, accessibility, security and performance. The same framework should also support the Everyday Financial Confidence website, Genistar-related applications, the DJITT main website, and future client applications.
+
+My recommendation is to build a central **DJITT Quality Engineering Framework** around your existing VS Code + Git + Netlify workflow, rather than adopting a completely separate development platform.
+
+## 1. The recommended technology stack
+
+**Playwright — end-to-end browser testing**
+
+(Core component)
+
+Automates Chromium, Firefox and WebKit browsers. Tests navigation, forms, mobile-sized viewports, user journeys, screenshots and browser errors.
+
+Website: [playwright.dev](https://playwright.dev/)
+
+---
+
+**Vitest — unit and component tests**
+
+Checks JavaScript functions, validation rules, data transformations, pricing calculations and reusable Website Factory components without needing a full browser journey.
+
+Website: [vitest.dev](https://vitest.dev/)
+
+---
+
+**GitHub Actions — automated execution**
+
+Runs the tests whenever code is pushed or a pull request is opened, and can schedule overnight regression tests.
+
+Website: [GitHub Actions documentation](https://docs.github.com/en/actions)
+
+---
+
+**axe-core — accessibility testing**
+
+Detects many common accessibility defects, such as missing accessible names, invalid ARIA usage and insufficient colour contrast.
+
+Website: [axe-core](https://github.com/dequelabs/axe-core)
+
+---
+
+**OWASP ZAP — web security scanning**
+
+Adds automated security checks for authorised test environments. It complements, but does not replace, security reviews and penetration testing.
+
+Website: [OWASP ZAP](https://www.zaproxy.org/)
+
+Additional tools can be introduced for Lighthouse performance audits, dependency vulnerability scanning, visual regression testing and production monitoring. You do not need to install everything on day one.
+
+**Architecture principle:** use one central testing framework with a separate application configuration for each project. Each application retains its own source code, deployment settings, credentials and release controls.
+
+
+## 2. Establish the architecture before installing anything
+
+Use this structure as the long-term target:
+
+**DJITT Quality Engineering Framework**
+
+Shared test standards, reusable test helpers, policies and reports
+
+**Website Factory**
+
+Templates, generated websites, product catalogues, enquiry forms
+
+**DJITT websites**
+
+SEO, navigation, lead capture, content and accessibility
+
+**Business applications**
+
+User journeys, APIs, CRM integrations and workflows
+
+**Security and reliability**
+
+Dependency checks, permissions, performance and monitoring
+
+**Automated release gate**
+
+Pass → eligible for release · Fail → block release and report defects
+
+The key distinction is that **the framework is shared, but each application has its own tests and acceptance criteria**. An accounting website and a marketplace may share mobile, security and accessibility tests, but their business logic must be tested separately.
+
+Start with the existing `C:\dev\DJITT Website Factory` project as the pilot. Once the framework is reliable, extract common helpers and workflows into a central private repository such as `djitt-quality-engineering`.
+
+## 3. Define what must be tested
+
+Before writing automation, create a test inventory. For Website Factory, use these initial categories.
+
+| Test layer          | What it must verify                                                                      |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| Unit tests          | Validation, product data, pricing and reusable JavaScript functions                      |
+| Integration tests   | Front-end forms, Netlify Functions, API contracts and CRM integrations                   |
+| End-to-end tests    | Visitor arrives, browses, submits an enquiry and reaches the correct outcome             |
+| Cross-browser tests | Chromium, Firefox and WebKit compatibility                                               |
+| Responsive tests    | Mobile, tablet and desktop layouts                                                       |
+| Visual regression   | Unexpected changes to layout, typography, images and components                          |
+| Accessibility       | Keyboard navigation, accessible labels, contrast and semantic structure                  |
+| SEO and content     | Page titles, descriptions, canonical URLs, indexability and broken links                 |
+| Security            | Vulnerable dependencies, exposed secrets, unsafe input handling and access controls      |
+| Performance         | Page speed, layout stability and excessive JavaScript or image payloads                  |
+| Reliability         | Error handling, retries where appropriate, logging and recovery from failed integrations |
+
+Not every test needs to run on every code change. Fast tests should run first, with more expensive browser, visual and security checks following in stages.
+
+## 4. Prepare the development environment
+
+On the Windows PC where you use VS Code:
+
+1. Install a supported Node.js LTS release from [nodejs.org](https://nodejs.org/).
+2. Install Git from [git-scm.com](https://git-scm.com/) if it is not already installed.
+3. Open VS Code and open the existing DJITT Website Factory folder.
+4. Open the integrated PowerShell terminal.
+5. Check the installed tools.
+
+Run:
+
+If any command is not recognised, install or repair that tool and reopen the terminal.
+
+Before changing anything, check the current project structure:
+
+Do not overwrite an existing `package.json` or initialise a second Git repository if the project already has one.
+
+## 5. Install the first testing tools
+
+For the pilot, use Playwright as the main browser automation framework and Vitest for unit tests.
+
+If the project already has an npm setup, install the following into its existing project:
+
+If there is no `package.json` yet, initialise one first:
+
+Add accessibility testing later in the same pilot:
+
+For CI, the Playwright browser installation will also need its operating-system dependencies. The official [Playwright CI guide](https://playwright.dev/docs/ci) explains this setup. ([github.com][1], [playwright.dev][2])
+
+## 6. Establish the testing folder structure
+
+Create this structure in the pilot repository. Adapt it if your project already has an established testing convention.
+
+Keep the test code separate from the website templates and generated client websites. This helps prevent the testing framework from accidentally changing the applications it is testing.
+
+For a static project, you can run browser tests against a local static server. For Netlify Functions, use a local Netlify development environment or a dedicated test deployment so that the real application behaviour is exercised.
+
+[1]: https://github.com/microsoft/playwright/blob/main/docs/src/ci-intro.md "playwright/docs/src/ci-intro.md at main · microsoft/playwright · GitHub"
+[2]: https://playwright.dev/docs/ci "Continuous Integration | Playwright"
+
+
+## 7. Configure Playwright
+
+Create `playwright.config.ts` in the project root.
+
+This establishes:
+
+* Browser coverage for desktop and mobile.
+* Failure screenshots, video and diagnostic traces.
+* Retries in CI to help diagnose transient failures.
+* JUnit and HTML reports.
+* A configurable base URL, so the same tests can target local, staging or preview environments.
+
+A retry must not be treated as a fix. Record tests that fail initially but pass on retry as flaky tests and investigate them. Keep CI execution controlled and predictable, following the [Playwright CI recommendations](https://playwright.dev/docs/ci). ([playwright.dev][1])
+
+## 8. Write the first automated tests
+
+Start with basic checks before automating complex user journeys.
+
+Create `tests/e2e/smoke.spec.ts`:
+
+These are deliberately simple starter tests. They are not sufficient to certify a production website, and the second test does not detect every possible failed network request.
+
+Next, add `tests/e2e/navigation.spec.ts`:
+
+This test assumes the application has a `header nav a` structure. Change the selector to match your actual templates; do not redesign working templates just to fit the example.
+
+### Add scripts to `package.json`
+
+Merge these scripts into the existing `scripts` section, preserving any current build or deployment commands.
+
+For the first local run, start a local static server that serves your website on port 4173. If the project uses Netlify Functions, use `netlify dev` or a suitable test deployment instead of assuming a static server can execute those functions.
+
+Then run:
+
+If the test fails, inspect the reported URL, assertion, screenshot and trace before modifying the test. A failing test may indicate a real application defect rather than an automation problem.
+
+## 9. Build the Website Factory regression suite
+
+Once the basic tests run, create a standard acceptance suite for every generated website.
+
+### Website Factory acceptance checklist
+
+of  checks reviewed [Reset]
+
+### Critical Website Factory rule: test generated websites, not just the factory
+
+A template can work perfectly in isolation and still generate a broken client website because of missing configuration, malformed data or invalid asset paths.
+
+Therefore, run the acceptance suite against representative generated sites, including:
+
+* A professional services website.
+* A product catalogue website such as Shalom Beauty Venture.
+* A property management website.
+* A food or marketplace-related website.
+* Any future application type with materially different functionality.
+
+Use test fixtures to generate predictable sites, then run the same shared suite against each one. Keep business-specific tests separate where workflows differ.
+
+For product sites, verify product counts, prices, image fallbacks and missing-data behaviour. For service sites, verify contact forms, calls to action, enquiry validation and service-page navigation.
+
+## 10. Test integrations without damaging real systems
+
+DJITT applications may connect to Netlify Functions, GoHighLevel, external APIs, email systems and CRM workflows. These require a separate integration-testing strategy.
+
+Use three levels:
+
+1. **Mocked tests:** simulate API success, validation errors, timeouts, rate limits and server failures. These are fast and safe.
+2. **Test-environment integration tests:** use dedicated test credentials, a test CRM location or equivalent isolated account, and clearly marked synthetic records.
+3. **Controlled live smoke tests:** check essential production paths without creating real customer records, triggering outbound campaigns or changing production data.
+
+For a lead form, test the complete expected journey:
+
+`Visitor → form validation → serverless function → CRM contact → expected outcome`
+
+Verify that authentication failures do not leak credentials, that server errors are handled gracefully, and that repeated requests do not create unintended duplicate contacts.
+
+**Important:** never run destructive tests or automated marketing campaigns against real client records. Do not put API keys, CRM tokens or other secrets in test fixtures, browser code, screenshots or logs. Use GitHub Actions secrets and Netlify environment variables with appropriately limited permissions.
+
+[1]: https://playwright.dev/docs/ci "Continuous Integration | Playwright"
+
+
+## 11. Automate the test run with GitHub Actions
+
+Once the local tests pass, make them run automatically when code changes.
+
+First, connect the project to a Git repository if it is not already connected. Protect the production branch so changes go through pull requests and required quality checks.
+
+Create `.github/workflows/quality-gates.yml`:
+
+This is a starter workflow. It assumes the repository has a working `package-lock.json`, the test scripts above, and a valid test environment.
+
+**Before enabling it:** configure the GitHub Actions repository variable `TEST_BASE_URL` with a real, reachable test URL. For example, use the URL of a dedicated staging website. If you have not yet created staging, first use a local server in CI or configure a static-site preview workflow; do not leave the variable empty and expect browser tests to work.
+
+GitHub's Playwright workflow pattern installs dependencies, installs browsers, runs tests and saves reports as artifacts. ([github.com][1], [playwright.dev][2])
+
+## 12. Connect testing to Netlify deployments
+
+This is where the framework becomes useful for real production delivery.
+
+Netlify supports Deploy Previews for changes submitted through pull requests when the repository and deployment configuration are connected. These provide a separate URL to review a proposed release before it goes live. ([docs.netlify.com][3], [docs.netlify.com][4])
+
+Implement the release flow in this order:
+
+The workflow in section 11 runs browser tests against a configured URL; it does **not** itself discover a new Netlify preview URL or guarantee that the preview is ready. That integration must be added separately.
+
+For the next stage, configure your repository and Netlify integration to expose the preview URL, then trigger Playwright against that exact URL once deployment completes. If you use a GitHub pull request, keep the test result as a required status check before merging.
+
+Keep preview environments isolated from production data. Netlify notes that preview URLs may be accessible to anyone with the link unless access controls are configured, so use private or password-protected previews where appropriate. ([docs.netlify.com][3], [docs.netlify.com][4])
+
+## 13. Add security, accessibility and performance gates
+
+Once browser regression testing is stable, extend the pipeline in separate jobs.
+
+| Gate                | Tool or approach                                             | Release policy                               |
+| ------------------- | ------------------------------------------------------------ | -------------------------------------------- |
+| Code quality        | ESLint, TypeScript checks where applicable                   | Block on errors                              |
+| Dependency security | Dependabot and npm audit, with controlled severity policies  | Block on qualifying vulnerabilities          |
+| Secret detection    | GitHub secret scanning or an approved secret scanner         | Block on confirmed secret exposure           |
+| Accessibility       | axe-core with Playwright                                     | Block on serious, confirmed violations       |
+| Performance         | Lighthouse CI                                                | Set thresholds appropriate to the page type  |
+| Visual regression   | Playwright screenshots or a dedicated visual testing service | Review unexplained visual changes            |
+| Security scanning   | OWASP ZAP against authorised staging environments            | Block on confirmed release-blocking findings |
+
+Do not make an unfiltered vulnerability scan the sole release decision: establish severity thresholds, review false positives, and track exceptions with owners and expiry dates.
+
+For accessibility, automated checks cannot establish full compliance. Keyboard testing, focus behaviour, screen-reader review and human assessment remain necessary.
+
+For performance, test representative mobile pages under repeatable conditions. A single noisy run should not automatically cause a production rollback; use repeatable measurements and defined budgets.
+
+## 14. Make the framework reusable across every DJITT application
+
+After the Website Factory pilot works, create a private repository named `djitt-quality-engineering`.
+
+Organise the shared repository into:
+
+* `playwright/` — common browser fixtures and utilities.
+* `accessibility/` — shared accessibility checks.
+* `security/` — standard scanning policies and scripts.
+* `workflows/` — reusable GitHub Actions workflows.
+* `templates/` — application-specific starter configurations.
+* `documentation/` — release policies, test standards and incident procedures.
+
+Each application repository then retains its own:
+
+* Application tests and fixtures.
+* Environment-specific base URLs.
+* Secret references and deployment configuration.
+* Business acceptance criteria.
+* Release approvals and exception records.
+
+For the initial rollout, copying a version-controlled starter workflow into each repository is acceptable. As the number of applications grows, move common CI jobs into versioned reusable workflows or a private npm package. Pin dependencies and reusable workflows to reviewed versions so a central change does not unexpectedly break every application.
+
+For AI-powered applications, add tests for retrieval accuracy, incorrect or unsupported answers, prompt-injection resistance, access-control boundaries and sensitive-data leakage. Use fixed evaluation datasets and explicit acceptance criteria rather than assuming an AI response will always be identical.
+
+[1]: https://github.com/microsoft/playwright/blob/main/docs/src/ci-intro.md "playwright/docs/src/ci-intro.md at main · microsoft/playwright · GitHub"
+[2]: https://playwright.dev/docs/ci "Continuous Integration | Playwright"
+[3]: https://docs.netlify.com/deploy/deploy-types/deploy-previews/ "Deploy Previews | Netlify Docs"
+[4]: https://docs.netlify.com/deploy/deploy-overview/ "Deploy overview | Netlify Docs"
+
+
+## 15. Roll out in four implementation phases
+
+Do not attempt to automate every application at once. Use the following rollout plan.
+
+## Week 1
+
+Foundation
+
+**Phase 1 — Website Factory pilot**
+
+* Install Playwright and Vitest.
+* Configure the test folders and scripts.
+* Automate smoke tests, navigation and mobile checks.
+* Establish a baseline for the existing templates.
+* Run the suite locally and fix genuine defects.
+
+---
+
+## Week 2
+
+Integration
+
+**Phase 2 — Automated delivery**
+
+* Add GitHub Actions.
+* Configure Netlify Deploy Previews.
+* Test form validation and serverless functions in an isolated environment.
+* Save reports and failure traces.
+* Require successful checks before merging.
+
+---
+
+## Week 3
+
+Assurance
+
+**Phase 3 — Enterprise controls**
+
+* Add accessibility and security gates.
+* Establish performance budgets and visual regression tests.
+* Implement synthetic CRM and API integration tests.
+* Set defect severity, ownership and exception procedures.
+
+---
+
+## Week 4
+
+Scale
+
+**Phase 4 — Reusable DJITT standard**
+
+* Validate multiple Website Factory samples.
+* Create shared workflows and test utilities.
+* Onboard the DJITT main website and one business application.
+* Add production monitoring and release evidence.
+* Document the standard for every new project.
+
+These are planning estimates, not guaranteed delivery dates. The actual duration depends on your current repository structure, existing tests and integration complexity.
+
+## 16. Define the release acceptance criteria
+
+Before calling the framework production-ready, require the following:
+
+* [ ] Every application has documented critical user journeys.
+* [ ] Critical business workflows have automated regression tests.
+* [ ] Required CI checks must pass before a production release.
+* [ ] Failures produce useful logs, screenshots or traces.
+* [ ] Test and production credentials are separated.
+* [ ] No unapproved critical security findings remain open.
+* [ ] Accessibility and performance thresholds are documented.
+* [ ] Flaky tests are tracked rather than routinely ignored.
+* [ ] Production smoke tests run after deployment.
+* [ ] A rollback or recovery procedure exists for failed releases.
+* [ ] Test results, exceptions and release approvals are auditable.
+
+## My recommendation for DJITT
+
+Build this as a **quality gate in the Website Factory development pipeline**, not as a standalone collection of scripts.
+
+The first priority is the Website Factory because every defect in a reusable template can be reproduced across multiple client sites. Once its templates and generated-site tests are dependable, the same framework can protect every subsequent application you build.
+
+The most useful next step is to inspect the current `C:\dev\DJITT Website Factory` project and tailor the installation to its actual structure. That will avoid overwriting existing scripts, choosing the wrong local server, or building tests that do not exercise your Netlify Functions.
+
+
+===============================================================================
+
+# DJITT.co.uk — Comprehensive Unit Test Plan
+
+A unit test suite for DJITT should verify that the individual pieces of the website work correctly in isolation, before relying on end-to-end smoke tests to prove that the whole system works together.
+
+The distinction is important:
+
+* **Unit tests:** Does a function validate an email correctly, map form fields properly, construct a GHL payload correctly, or handle an API error as expected?
+* **Integration tests:** Does the Netlify function communicate correctly with GHL?
+* **Smoke tests:** Can a visitor submit an enquiry and see the correct contact, opportunity and workflow outcome in GHL?
+
+For DJITT, I recommend a unit-test suite covering the static website, reusable JavaScript, form validation, routing, Netlify functions, CRM payload construction, error handling and SEO utilities.
+
+The tests should be repeatable, fast, independent of production data and safe to run on every code change.
+
+## 1. Recommended test architecture
+
+**DJITT website source code**
+
+Pages · components · utilities · forms
+
+**Pure logic tests**
+
+Validation, formatting, routing and mapping
+
+**Component tests**
+
+Forms, buttons, menus and UI states
+
+**Function tests**
+
+HTTP methods, payloads and error handling
+
+**Contract tests**
+
+GHL field names, IDs and API response handling
+
+**Automated test runner**
+
+Vitest · Testing Library · coverage report · CI checks
+
+### Suggested tools
+
+| Tool               | Purpose                                                                     |
+| ------------------ | --------------------------------------------------------------------------- |
+| Vitest             | Unit tests for JavaScript and TypeScript                                    |
+| Testing Library    | Testing interactive UI components where applicable                          |
+| `node:test`        | Alternative if the project is plain Node.js and you prefer built-in testing |
+| Playwright         | Browser-level tests, complementing—not replacing—unit tests                 |
+| Coverage reporting | Identify untested branches and error-handling paths                         |
+
+**Important:** DJITT currently uses a static Netlify-hosted website with serverless functions. The exact framework and existing test tooling should be confirmed before adding dependencies. The examples below assume JavaScript and Netlify Functions, with Vitest as the suggested runner.
+
+## 2. Complete unit-test coverage matrix
+
+The following is the proposed test inventory for DJITT. These are test cases to implement against the actual source code; they have not yet been executed against your repository.
+
+## Unit-test implementation tracker
+
+Track which proposed tests have been implemented and verified. This is separate from the live-site smoke-test checklist.
+
+Test cases
+
+Not passed
+
+Passed:  · Failed:  · Blocked:
+
+Filter tests
+
+* All tests
+* Not tested
+* Passed
+* Failed
+* Blocked
+  Current selection unavailable.
+
+[Copy report] [Reset]
+
+These 70 cases form the baseline. Add further cases for any additional functions or business rules discovered in the repository.
+
+## 3. Set up the unit-test framework
+
+For DJITT's JavaScript-based Netlify project, Vitest is a practical option because it supports isolated tests, mocked dependencies and coverage reports. ([vitest.dev][1], [github.com][2])
+
+First, open the actual website repository in VS Code. Based on the project structure we've discussed, that will be the repository containing `netlify/functions/website-leads-submit` and the static website files.
+
+In the VS Code terminal, inspect the existing setup:
+
+Check whether a `package.json` and an existing test framework are present. Do not replace an existing working setup unnecessarily.
+
+If the project uses npm and does not already have a test runner, install Vitest:
+
+Add the following scripts to the existing `package.json`, preserving its other scripts and configuration:
+
+A suggested directory layout is:
+
+This is a proposed layout, not a description of files confirmed to exist. Adapt it to the repository's actual structure and module system.
+
+## 4. Example: test the website form payload
+
+One of the most valuable tests is to verify that a form submission is transformed into the exact data structure expected by GHL.
+
+Ideally, separate the pure payload-building logic from the Netlify handler so it can be tested without making network requests.
+
+For example, a proposed helper might look like this:
+
+This is illustrative code. Do not add it verbatim until you have checked the existing field names, expected source value and actual GHL mapping. The existing implementation may already perform this work.
+
+A corresponding unit test could be:
+
+The point is not to force a particular implementation. It is to make the mapping rules explicit and protect them from accidental changes.
+
+## 5. Example: test the Netlify handler without contacting GHL
+
+The handler should be testable using mocked dependencies. Vitest supports mock functions and controlled success or failure responses, so tests can run without sending real API requests. ([github.com][3], [main.vitest.dev][4])
+
+For the existing `website-leads-submit` function, implement tests for these scenarios:
+
+| Input or condition                                        | Expected behaviour                                             |
+| --------------------------------------------------------- | -------------------------------------------------------------- |
+| Valid POST and successful GHL response                    | Returns the documented success status                          |
+| Invalid email or missing required data                    | Rejects input before calling GHL                               |
+| Malformed JSON                                            | Returns a controlled client error                              |
+| GET or unsupported method                                 | Returns the documented 4xx status                              |
+| Missing API token                                         | Fails safely without contacting GHL                            |
+| GHL returns 401 or 403                                    | Does not report success                                        |
+| GHL returns 429 or 500                                    | Applies the defined error/retry policy                         |
+| Network request times out                                 | Returns a controlled error                                     |
+| GHL contact creation succeeds but a later operation fails | Reports the partial outcome accurately                         |
+| Exception contains sensitive details                      | Does not expose credentials or internal details to the visitor |
+
+A particularly important assertion is that invalid input never triggers the external request:
+
+Here, `ghlClient.createContact` is a hypothetical mocked dependency. Use the actual dependency or abstraction in your implementation.
+
+## 6. Special unit tests for the DJITT–GHL architecture
+
+There are several design decisions that should be tested explicitly.
+
+### A. Contact creation and opportunity creation
+
+Your intended process needs a clearly defined owner for each action.
+
+* If the Netlify function creates only the contact, test that it does not also create an opportunity.
+* If the GHL workflow creates the opportunity, test the function's output and separately verify the workflow configuration through integration tests.
+* If the function creates both, test partial failures and duplicate prevention for both operations.
+
+**Do not allow both the function and workflow to create the same opportunity unintentionally.**
+
+### B. Correct pipeline and stage
+
+The website enquiry route should use the configured DJITT Website Enquiry pipeline and its intended initial stage, not the Advisor Acquisition pipeline.
+
+Unit tests should verify that pipeline and stage configuration is selected correctly. Tests should not hard-code unverified IDs simply to make assertions pass.
+
+### C. Existing contacts and repeated submissions
+
+Test the business rules for:
+
+* A brand-new contact.
+* An existing contact with the same email.
+* An existing contact with updated business information.
+* A repeated request caused by a browser retry.
+* A failed request that is retried.
+* Two requests arriving close together.
+
+A unit test can validate the deduplication or idempotency logic, but only an integration test can establish that the live GHL account behaves as intended.
+
+### D. Environment variables
+
+Test missing or invalid values for:
+
+* GHL API token.
+* GHL location ID.
+* Pipeline ID, if the function uses it.
+* Custom-field IDs.
+* Other required configuration.
+
+The function should fail clearly rather than silently fall back to another pipeline, location or account.
+
+## 7. Coverage and pass criteria
+
+Once the suite exists, run:
+
+Review the report for uncovered functions and branches. Vitest supports V8-based coverage reporting. ([github.com][2])
+
+My recommended initial acceptance thresholds are:
+
+| Measure                              | Target                     |
+| ------------------------------------ | -------------------------- |
+| Pure utility functions               | 90%+ line coverage         |
+| Form validation and field mapping    | 95%+ line coverage         |
+| Netlify handler business logic       | 90%+ line coverage         |
+| Critical validation/error branches   | 100% of identified cases   |
+| Secrets and invalid-input protection | All defined tests pass     |
+| Overall project coverage             | Aim for 85%+, then improve |
+
+These are proposed engineering targets, not universal standards. High coverage alone does not prove correctness: a test can execute a line without checking the behaviour that matters.
+
+## 8. How the unit tests fit into DJITT's release process
+
+**1. Developer changes code**
+
+Website, utility or Netlify function
+
+---
+
+**2. Unit tests run**
+
+Validate pure logic, mappings and failure paths
+
+---
+
+**3. Integration tests run**
+
+Verify the Netlify–GHL API contract and controlled CRM behaviour
+
+---
+
+**4. Deploy Preview smoke tests**
+
+Verify critical visitor journeys before release
+
+---
+
+**5. Production verification**
+
+Run a controlled enquiry and confirm contact, opportunity and workflow outcomes
+
+## 9. The next practical step
+
+To turn this plan into a real test suite rather than a specification, the next step is to inspect the actual DJITT repository—particularly:
+
+* `netlify/functions/website-leads-submit`
+* The form submission JavaScript.
+* The GHL payload and custom-field mapping.
+* `package.json` and existing test tooling.
+* Shared utilities and route configuration.
+
+The tests can then use the actual exported functions, real field names and existing error-handling logic instead of hypothetical interfaces.
+
+**I recommend implementing the first 25 tests around validation and website form mapping, then the Netlify/GHL tests.** Those areas protect the enquiry process that DJITT now depends on to turn website visitors into CRM leads.
+
+[1]: https://vitest.dev/guide/mocking/functions "Mocking Functions | Vitest"
+[2]: https://github.com/vitest-dev/vitest/blob/main/docs/guide/coverage.md "vitest/docs/guide/coverage.md at main · vitest-dev/vitest · GitHub"
+[3]: https://github.com/vitest-dev/vitest/blob/main/docs/guide/mocking.md "vitest/docs/guide/mocking.md at main · vitest-dev/vitest · GitHub"
+[4]: https://main.vitest.dev/guide/learn/mock-functions "Mock Functions | Guide | Vitest"
+
+
+
+===================================================================================================
+
+
+# DJITT.co.uk — Comprehensive Smoke Test Plan
+
+The purpose of this smoke test is to verify that the current DJITT website rebuild works end to end: visitors can navigate the site, understand the services, submit enquiries, reach the right destination, and enter the correct GoHighLevel (GHL) CRM process.
+
+This should be treated as a **production-readiness test**, not simply a check that the homepage loads.
+
+Based on the current DJITT architecture, the main journey to validate is:
+
+**DJITT.co.uk**
+
+Pages, navigation, offers and calls to action
+
+**Website forms and front doors**
+
+Validation, routing, scoring, resources and bookings
+
+**Netlify and its functions**
+
+Submission handling, field mapping, error handling
+
+**GoHighLevel CRM**
+
+Contact data, route classification, opportunities, pipelines and workflows
+
+**Verified business outcome**
+
+Correct acknowledgement, follow-up, assignment and traceable results
+
+An important distinction: a successful form submission does not necessarily mean an opportunity was created or the correct workflow ran. Your website form has recently started delivering contacts into GHL, so the CRM handoff deserves particular attention.
+
+## 1. Scope of the smoke test
+
+The test covers nine areas:
+
+* Public website availability and navigation.
+* All service and offering pages.
+* Calls to action, links, forms and interactive components.
+* Netlify deployment and serverless functions.
+* GHL contact creation, updates, field mapping and opportunity creation.
+* Practice Score, booking and other external integrations.
+* Mobile usability, accessibility and browser compatibility.
+* SEO, indexing, metadata and technical integrity.
+* Security, privacy, performance and production monitoring.
+
+The test should run against the live site and, where possible, a Netlify Deploy Preview. Changes that create CRM records or trigger outbound messages should first be tested in a controlled environment.
+
+## 2. Master smoke-test checklist
+
+Use this checklist to record the actual result of each test. A test is only **PASS** when the expected behaviour has been observed, not merely assumed.
+
+## Interactive test tracker
+
+Mark each test as you run it. The results stay in this checklist during the current conversation view; they are not automatically saved to your project or test system.
+
+Total tests
+
+Remaining
+
+Passed
+
+Failed / blocked
+
+# /
+
+Show
+
+* All tests
+* Not tested
+* Failed
+* Blocked
+* Passed
+  Current selection unavailable.
+
+[Copy test report] [Reset checklist]
+
+## 3. Critical end-to-end test: Website enquiry → GHL
+
+This is the highest-priority test because the website form has recently begun creating contacts in GHL, but the full opportunity and workflow journey still needs to be confirmed.
+
+### Test E01–E10 in this exact order
+
+1. **Prepare a unique test lead.** Use a dedicated test email address and a recognisable business name, such as `DJITT Smoke Test 1810`. Do not use a real prospect or client.
+2. **Submit the live website form once.** Capture the submission time, displayed confirmation and any request/reference identifier available.
+3. **Check the Netlify function.** Open Netlify → your DJITT site → Cloud compute → Functions → `website-leads-submit`. Inspect the invocation and error logs around the submission time. Netlify documents function logs for production and preview deploys. ([docs.netlify.com][1], [docs.netlify.com][2])
+4. **Inspect the GHL contact.** Confirm the correct subaccount, contact identity, email, phone, business information and all applicable custom fields.
+5. **Check the routing field.** Confirm `DJITT — Front Door Route` is set to `Website`, rather than blank or another route.
+6. **Inspect workflow execution history.** Find `DJITT — Website Enquiry → Acquisition` and establish whether the contact enrolled, which actions ran and whether any action failed. HighLevel's execution logs and enrollment history are designed for this investigation. ([help.gohighlevel.com][3])
+7. **Verify the opportunity.** Check that the contact has exactly one opportunity in the intended website enquiry pipeline at `01 — New Lead`.
+8. **Verify the rest of the journey.** Check owner assignment, task creation, notifications and follow-up actions, using test-safe recipients and channels.
+9. **Repeat with an existing contact.** Submit a controlled update to a test contact already in GHL. Verify the contact is updated and that opportunity creation follows the intended re-entry and duplicate-prevention rules.
+
+### Important pipeline discrepancy to resolve
+
+The intended destination has been identified as the **DJITT Website Enquiry pipeline**, stage `01 — New Lead`. The workflow is named `DJITT — Website Enquiry → Acquisition`.
+
+Do not assume the opportunity is being created in that pipeline merely because the contact exists. Explicitly verify the Create Opportunity action, pipeline ID and stage ID. Also confirm that the workflow does not accidentally route website leads to `DJITT Advisor Acquisition`.
+
+The expected result is one correctly populated contact, one correctly routed opportunity, and the intended workflow execution—without duplicates or unintended messages.
+
+## 4. Automated browser smoke tests
+
+For repeatable checks after future website changes, use Playwright with a configurable base URL. Start with Chromium, then add Firefox and WebKit where available.
+
+A basic test can confirm the homepage and critical paths load:
+
+This is a starter test, not a complete automated suite. Confirm the actual URL paths against the live site, then add assertions for form labels, required fields, CTA destinations, mobile navigation and key page content.
+
+For CI/CD, run browser tests against a Netlify Deploy Preview before release, then run a smaller production smoke test after deployment. Deploy Previews allow changes to be reviewed separately from production. ([docs.netlify.com][4], [docs.netlify.com][5])
+
+**Keep the CRM tests separate from ordinary browser tests:** mock the GHL API for automated tests, or use dedicated test contacts and controlled workflow settings for live integration tests. Do not let every CI run trigger real SMS, emails or sales tasks.
+
+## 5. Release acceptance criteria
+
+DJITT should be considered ready for release only when the following conditions are met.
+
+| Area         | Minimum acceptance criteria                                           |
+| ------------ | --------------------------------------------------------------------- |
+| Website      | All critical pages load and navigation works                          |
+| Forms        | Valid submissions succeed; invalid submissions fail safely            |
+| CRM          | Correct contact data and route fields are present                     |
+| Pipeline     | One opportunity reaches the intended pipeline and stage               |
+| Workflows    | Correct enrollment and actions are verified in execution history      |
+| Integrations | Booking, scoring and resource journeys work as intended               |
+| Mobile       | No blocking layout or interaction issues                              |
+| SEO          | Important pages are indexable, with valid metadata and canonical URLs |
+| Security     | No exposed secrets or critical data-handling issues                   |
+| Monitoring   | Failures are visible in logs and recovery procedures are known        |
+
+Any critical failure in form submission, CRM routing, opportunity creation, data security or consent handling should block release until resolved. A blocked test is not a pass.
+
+## 6. Recommended execution order
+
+**Phase 1 — Critical smoke test**
+
+Availability, core navigation, website form, Netlify function, GHL contact, opportunity and workflow execution.
+
+---
+
+**Phase 2 — User journeys**
+
+All eight offerings, mobile layouts, Practice Score, booking calendars, resources and external links.
+
+---
+
+**Phase 3 — Technical assurance**
+
+SEO, accessibility, security, performance, error handling and automated browser coverage.
+
+---
+
+**Phase 4 — Regression testing**
+
+Repeat the critical tests after every material change to the site, Netlify functions, GHL custom fields or workflows.
+
+Useful references:
+
+* [DJITT website](https://djitt.co.uk/)
+* [Netlify function logs documentation](https://docs.netlify.com/build/functions/logs/)
+* [Netlify Deploy Previews documentation](https://docs.netlify.com/deploy/deploy-types/deploy-previews/)
+* [HighLevel workflow execution logs](https://help.gohighlevel.com/support/solutions/articles/155000003992-execution-logs-enrolment-history-enhancements)
+
+**My recommendation:** start with Phase 1 and do not spend time polishing secondary SEO or performance issues until the full enquiry journey is proven. For DJITT, a site that looks excellent but loses an enquiry between the form, GHL contact, opportunity and workflow is not production-ready.
+
+[1]: https://docs.netlify.com/build/functions/logs/ "Function logs | Netlify Docs"
+[2]: https://docs.netlify.com/build/functions/overview/ "Functions overview | Netlify Docs"
+[3]: https://help.gohighlevel.com/support/solutions/articles/155000003992-execution-logs-enrolment-history-enhancements "Improved Workflow Execution Logs & Enrollment History : HighLevel Support Portal"
+[4]: https://docs.netlify.com/deploy/deploy-types/deploy-previews/ "Deploy Previews | Netlify Docs"
+[5]: https://docs.netlify.com/deploy/deploy-overview/ "Deploy overview | Netlify Docs"
+
+
