@@ -10,4 +10,29 @@ website/playwright-report/
 website - Copy/
 websitebackup/
 website BAckupB4TestAutomation/
+
+# Local-only project notes, historical docs, and artifacts
+# Keep them for working context, but do not publish them remotely.
+docs/
+reports/
 repoStrategy.md
+ChangesMade.md
+DJITT 2026 AI Agent.md
+DJITTWebFactory.md
+DjittAutomationTestFramework.txt
+DjittWebsiteAutomationDay1CrashTest.md
+DjittWebsiteAutomationExecutionChecklist.md
+DjittWebsiteAutomationGitHubActionsPipeline.md
+DjittWebsiteAutomationProgress.md
+DjittWebsiteAutomationProjectStructure.md
+DjittWebsiteAutomationTestPlan.md
+DjittWebsiteAutomationTestPlanv1.md
+FrontDoor.md
+FrontDoorDeployment.md
+ImplementationPlan.md
+ImplementationPlan3.md
+OurJourney.md
+VSCodeNew.md
+Websites.md
+flowchart.md
+implementationPlan2.md
