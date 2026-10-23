@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: website/package-lock.json
 
@@ -26,6 +26,23 @@ jobs:
         working-directory: website
         run: npm ci
 
-      - name: Run Playwright smoke suite
+      - name: Install Playwright browser
         working-directory: website
-        run: npx playwright test tests/smoke/homepage.spec.ts --reporter=line
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local website
+        working-directory: website
+        run: |
+          python3 -m http.server 4173 --directory . > /tmp/djitt-site.log 2>&1 &
+          for attempt in $(seq 1 10); do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/djitt-site.log
+          exit 1
+
+      - name: Run full Playwright suite
+        working-directory: website
+        run: npx playwright test --reporter=line

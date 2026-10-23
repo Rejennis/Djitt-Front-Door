@@ -20,22 +20,31 @@ The goal of this repository is to keep the website source and its quality checks
    ```powershell
    cd "c:\dev\DJITT Front Door\website"
    npm install
+   npx playwright install chromium
    ```
 
-2. Run the smoke suite:
+2. Start the local website in a separate terminal:
    ```powershell
    cd "c:\dev\DJITT Front Door\website"
-   npx playwright test tests/smoke/homepage.spec.ts --reporter=line
+   python -m http.server 4173
+   ```
+
+3. Run the full Playwright suite in another terminal:
+   ```powershell
+   cd "c:\dev\DJITT Front Door\website"
+   npx playwright test --reporter=line
    ```
 
 ## Current QA coverage
-The initial smoke suite validates:
+The Playwright suite validates:
 - homepage loads successfully
 - core hero content is present
 - problem and contact sections are visible
 - main Start Here CTA works
 - problem anchor navigation works
 - key CTA links are present and correctly routed
+- lead form required-field validation and a mocked successful submission
+- homepage and front-door accessibility smoke checks
 
 ## Notes
 - The site contains a third-party tracking script that triggers a CSP violation in the browser. This is treated as a known external-system condition rather than a functional regression in the live site.
