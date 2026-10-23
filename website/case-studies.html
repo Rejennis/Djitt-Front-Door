@@ -1,0 +1,730 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index,follow">
+    <meta name="description" content="DJITT Case Studies - Real results from financial advisors who use AI to grow their AUM and win back their time.">
+    <title>Case Studies - DJITT</title>
+    <link rel="canonical" href="https://djitt.co.uk/case-studies.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Case Studies - DJITT">
+    <meta property="og:description" content="See how financial advisory firms improve lead conversion, visibility, and growth with DJITT systems and automation.">
+    <meta property="og:url" content="https://djitt.co.uk/case-studies.html">
+    <meta property="og:site_name" content="DJITT">
+    <meta property="og:image" content="https://djitt.co.uk/assets/DjittLogoAug122026.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Case Studies - DJITT">
+    <meta name="twitter:description" content="See how financial advisory firms improve lead conversion, visibility, and growth with DJITT systems and automation.">
+    <meta name="twitter:image" content="https://djitt.co.uk/assets/DjittLogoAug122026.png">
+    <meta name="theme-color" content="#1C1F2B">
+    <link rel="icon" href="assets/DjittLogoAug122026.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* ── Base mobile overflow fixes ── */
+        html, body { overflow-x: hidden; }
+
+        /* ── Client metadata row (wraps on mobile) ── */
+        .cs-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 1.25rem;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+        }
+        .cs-meta span { white-space: nowrap; }
+
+        /* ── Page header ── */
+        .page-header {
+            background: linear-gradient(135deg, #1C1F2B 0%, #2A3448 60%, #1A2A3A 100%);
+            color: white;
+            padding: 3.5rem 20px;
+            text-align: center;
+        }
+        .page-header h1 { font-size: 2.5rem; color: white; margin-bottom: 0.75rem; }
+        .page-header p  { font-size: 1.1rem; opacity: 0.9; }
+
+        /* ── Grid ── */
+        .cs-section { padding: 4rem 20px; }
+        .case-studies-grid { display: grid; gap: 3rem; margin-top: 2rem; }
+
+        /* ── Card ── */
+        .case-study {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            position: relative;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            min-width: 0;        /* prevent grid item expanding past viewport */
+            max-width: 100%;     /* hard cap */
+            overflow-x: clip;   /* clip anything that still escapes */
+        }
+        .case-study:hover { border-color: var(--primary); box-shadow: var(--shadow-lg); }
+
+        .cs-featured { border-color: var(--primary); }
+        .cs-featured-badge {
+            position: absolute;
+            top: -14px;
+            left: 24px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 18px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Header row ── */
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .case-header h2 { font-size: 1.65rem; margin: 0; flex: 1; min-width: 0; }
+        .industry-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* ── Summary table ── */
+        .cs-table-wrap {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .cs-table-wrap h3 { margin-bottom: 1rem; font-size: 1.15rem; }
+        .cs-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; min-width: 0; }
+        .cs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 540px;
+        }
+        .cs-table thead tr { background: var(--secondary); color: white; }
+        .cs-table th { padding: 0.7rem 1rem; text-align: left; white-space: nowrap; }
+        .cs-table td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border-color); }
+        .cs-table tbody tr { background: white; }
+        .cs-row-alt { background: var(--bg-light) !important; }
+        .cs-total { font-weight: 700; }
+        .cs-green { color: var(--success); font-weight: 600; }
+        .cs-red   { color: var(--danger); font-weight: 600; }
+
+        /* ── Sections ── */
+        .case-problem, .case-solution, .case-results, .case-outcome { margin-bottom: 2rem; }
+        .case-problem h3, .case-solution h3, .case-results h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.85rem;
+            color: var(--primary);
+        }
+        .case-problem p, .case-solution p { color: var(--text-gray); line-height: 1.8; margin-bottom: 0.75rem; }
+        .case-problem ul, .case-solution ul { list-style: none; margin: 0.75rem 0; padding: 0; }
+        .case-problem ul li, .case-solution ul li { padding: 0.4rem 0 0.4rem 1.5rem; color: var(--text-gray); position: relative; }
+        .case-solution ul li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: 700; }
+
+        /* ── Phase boxes ── */
+        .cs-phase {
+            background: var(--bg-light);
+            border-left: 3px solid var(--primary);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin: 1.25rem 0;
+        }
+        .cs-phase h4 { color: var(--primary); margin-bottom: 0.6rem; font-size: 1rem; }
+        .cs-outcome-line { font-weight: 600; color: var(--success); margin-top: 0.75rem !important; }
+
+        /* ── Results grid ── */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+        .result {
+            text-align: center;
+            background: var(--bg-light);
+            padding: 1.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+        .result-metric { display: block; font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 0.4rem; }
+        .result-label  { display: block; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.4rem; }
+        .result p { font-size: 0.85rem; color: var(--text-gray); margin: 0; }
+
+        /* ── Quote ── */
+        .case-quote {
+            display: block;
+            font-style: italic;
+            margin: 1.5rem 0;
+            padding: 1.25rem 1.5rem;
+            border-left: 4px solid var(--primary);
+            background: #FEF3DC;
+            border-radius: 0 0.5rem 0.5rem 0;
+            color: var(--text-gray);
+            line-height: 1.8;
+        }
+        .case-quote footer { display: block; margin-top: 0.75rem; font-style: normal; font-weight: 600; color: var(--text-dark); }
+
+        /* ── Before / After ── */
+        .cs-before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        .cs-ba-label { font-weight: 700; margin-bottom: 0.5rem; }
+        .cs-before ul, .cs-after ul { list-style: disc; padding-left: 1.2rem; }
+        .cs-before ul li, .cs-after ul li { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 0.4rem; }
+
+        /* ── Outcome strip ── */
+        .case-outcome {
+            background: #FEF3DC;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--primary);
+        }
+        .case-outcome p { color: var(--text-gray); margin: 0; font-size: 0.95rem; }
+
+        /* ── Responsive: tablet (≤768px) ── */
+        @media (max-width: 768px) {
+            /* Page header */
+            .page-header { padding: 2.5rem 15px; }
+            .page-header h1 { font-size: 2rem; }
+
+            /* Grid & card */
+            .cs-section { padding: 2.5rem 15px; }
+            .case-studies-grid { gap: 2rem; }
+            .case-study { padding: 1.75rem 1.25rem; }
+
+            /* Case header — badge wraps below title */
+            .case-header { flex-direction: column; gap: 0.75rem; }
+            .case-header h2 { font-size: 1.35rem; }
+            .industry-badge { align-self: flex-start; }
+
+            /* Summary table — smaller padding */
+            .cs-table-wrap { padding: 1rem; }
+            .cs-table { font-size: 0.85rem; }
+            .cs-table th,
+            .cs-table td { padding: 0.6rem 0.75rem; }
+
+            /* Phase boxes */
+            .cs-phase { padding: 1rem 1.125rem; }
+
+            /* Results: 2 columns */
+            .results-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+
+            /* Quote */
+            .case-quote { padding: 1rem 1.25rem; font-size: 0.95rem; }
+
+            /* Before / After — stack vertically */
+            .cs-before-after { grid-template-columns: 1fr; gap: 1rem; }
+        }
+
+        /* ── Responsive: mobile (600px and below) ── */
+        @media (max-width: 600px) {
+            /* Results: single column on all phones */
+            .results-grid { grid-template-columns: 1fr; gap: 0.875rem; }
+            .result { padding: 1.25rem 1rem; }
+            .result-metric { font-size: 1.7rem; }
+        }
+
+        /* ── Responsive: mobile (≤480px) ── */
+        @media (max-width: 480px) {
+            /* Page header */
+            .page-header { padding: 2rem 15px; }
+            .page-header h1 { font-size: 1.6rem; }
+            .page-header p  { font-size: 1rem; }
+
+            /* Grid & card */
+            .cs-section { padding: 2rem 15px; }
+            .case-studies-grid { gap: 1.5rem; }
+            .case-study { padding: 1.375rem 1rem; }
+
+            /* Featured badge — align to card's reduced padding */
+            .cs-featured-badge {
+                font-size: 0.72rem;
+                padding: 3px 12px;
+                left: 16px;
+            }
+
+            /* Case header */
+            .case-header h2 { font-size: 1.2rem; }
+
+            /* Summary table — smaller text, tighter cells */
+            .cs-table-wrap { padding: 0.875rem; }
+            .cs-table { font-size: 0.78rem; min-width: 460px; }
+            .cs-table th,
+            .cs-table td { padding: 0.5rem 0.6rem; }
+
+            /* Phase boxes */
+            .cs-phase { padding: 0.875rem; font-size: 0.9rem; }
+            .cs-phase h4 { font-size: 0.95rem; }
+
+            /* Quote */
+            .case-quote { padding: 0.875rem 1rem; font-size: 0.9rem; }
+
+            /* Before / After labels + lists */
+            .cs-before-after { padding: 1rem; }
+            .cs-before ul li,
+            .cs-after ul li  { font-size: 0.85rem; }
+
+            /* Outcome strip */
+            .case-outcome { padding: 0.875rem 1rem; }
+            .case-outcome p { font-size: 0.9rem; }
+
+            /* Section headings within cards */
+            .case-problem h3,
+            .case-solution h3,
+            .case-results h3 { font-size: 1.05rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html" class="brand-link" aria-label="DJITT home">
+                    <img src="assets/DjittLogoAug122026.png" alt="DJITT" class="brand-logo">
+                </a>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="front-door.html">Front Door</a></li>
+                <li><a href="websites/">Websites</a></li>
+                <li><a href="resources/">Resources</a></li>
+                <li><a href="insights/">Insights</a></li>
+                <li><a href="case-studies.html">Case Studies</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Case Studies</h1>
+            <p>Real results from advisors who stopped losing clients to slow follow-ups — and started commanding their pipelines.</p>
+        </div>
+    </section>
+
+    <!-- Case Studies -->
+    <section class="cs-section">
+        <div class="container">
+            <div class="case-studies-grid">
+
+                <!-- ============================================================
+                     CASE STUDY 1 — Heritage Wealth Planning (Financial Advisor)
+                     ============================================================ -->
+                <article class="case-study cs-featured">
+                    <div class="cs-featured-badge">FEATURED CASE STUDY</div>
+
+                    <div class="case-header">
+                        <h2>Heritage Wealth Planning: £2.1M New AUM in 90 Days with Three AI Systems</h2>
+                        <span class="industry-badge">Independent Financial Advisor</span>
+                    </div>
+
+                    <!-- Executive Summary Table -->
+                    <div class="cs-table-wrap">
+                        <h3>Executive Summary</h3>
+                        <div class="cs-table-scroll">
+                            <table class="cs-table">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>Before DJITT</th>
+                                        <th>After DJITT</th>
+                                        <th>Improvement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Speed-to-lead response</td>
+                                        <td>4–6 hours</td>
+                                        <td>Under 2 minutes</td>
+                                        <td class="cs-green">−99% response time</td>
+                                    </tr>
+                                    <tr class="cs-row-alt">
+                                        <td>Cold database utilisation</td>
+                                        <td>0 (847 contacts dormant)</td>
+                                        <td>23 appointments in 30 days</td>
+                                        <td class="cs-green">New pipeline from existing assets</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Monthly social media videos</td>
+                                        <td>0–1</td>
+                                        <td>24+ per month</td>
+                                        <td class="cs-green">24× content output</td>
+                                    </tr>
+                                    <tr class="cs-row-alt">
+                                        <td>Admin hours per week</td>
+                                        <td>12 hours</td>
+                                        <td>1 hour</td>
+                                        <td class="cs-green">−92% admin time</td>
+                                    </tr>
+                                    <tr class="cs-total">
+                                        <td>New AUM (first 90 days)</td>
+                                        <td>—</td>
+                                        <td>£2.1M</td>
+                                        <td class="cs-green">7 new HNW clients</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- The Challenge -->
+                    <div class="case-problem">
+                        <h3>The Client</h3>
+                        <div class="cs-meta">
+                            <span><strong>Practice:</strong> Heritage Wealth Planning</span>
+                            <span><strong>Advisor:</strong> James Aldridge, IFA</span>
+                            <span><strong>Location:</strong> Birmingham, UK</span>
+                            <span><strong>Practice Size:</strong> James + 2 admin staff</span>
+                            <span><strong>AUM at Start:</strong> £38M</span>
+                            <span><strong>Years in Practice:</strong> 14</span>
+                        </div>
+
+                        <p style="margin-top:1rem;">James had built a genuinely excellent practice through word of mouth and strong client relationships. His referral pipeline was healthy — roughly 15–20 qualified enquiries per month — but he was watching a disturbing pattern. He was consistently losing prospects to a rival IFA across town.</p>
+
+                        <p style="margin-top:1rem;"><em>"I'd get a referral, send my details, and call back the same afternoon. The prospect had already taken a meeting with David across town. He called back within twenty minutes. I was losing business I had already earned."</em></p>
+
+                        <h3 style="margin-top:2rem;">Three Problems Compounding Each Other</h3>
+
+                        <p><strong>1. The Speed-to-Lead Trap</strong><br>
+                        James and his admin team were handling everything: answering emails, checking voicemails, booking calls. On a busy day, a new enquiry might sit for 4–6 hours before anyone followed up. Industry data is unambiguous: 78% of HNW prospects go with the first advisor to engage them. James was losing the race he didn't know he was running.</p>
+
+                        <p style="margin-top:1rem;"><strong>2. A Dormant Database Worth Hundreds of Thousands</strong><br>
+                        James had accumulated 847 enquiries over five years — people who had asked for information, attended a webinar, or been referred but never converted. They were sitting in a spreadsheet, untouched. He estimated about 200 were likely still in the market. He simply had no time to re-engage them.</p>
+
+                        <p><em>"Every few months I'd open that spreadsheet, feel guilty, and close it again."</em></p>
+
+                        <p style="margin-top:1rem;"><strong>3. Invisible to the Market</strong><br>
+                        James understood that HNW clients in his area needed to recognise him as the expert before they'd take a meeting. But between client work, compliance, and admin, he had produced two LinkedIn videos in the past 18 months. His rival — the one winning his leads — posted three times a week.</p>
+                    </div>
+
+                    <!-- The Solution -->
+                    <div class="case-solution">
+                        <h3>The Solution: Three AI Systems, Deployed in Sequence</h3>
+
+                        <p>DJITT ran a 45-minute Deep-Dive AI Audit and delivered a Custom AI Opportunities Report within 72 hours. We identified three high-impact systems and proposed a phased rollout to prove value quickly before scaling.</p>
+
+                        <div class="cs-phase">
+                            <h4>Phase 1 — AI Appointment Setter (Week 1–3)</h4>
+                            <p>We connected an AI-powered SMS and email responder to James's enquiry channels (website contact form, email, social DMs). The moment a new prospect made contact:</p>
+                            <ul>
+                                <li>✓ AI responds in under 2 minutes, 24 hours a day, 7 days a week</li>
+                                <li>✓ Introduces James by name with a warm, personalised message</li>
+                                <li>✓ Asks 3 qualifying questions (investment amount, timeline, goal)</li>
+                                <li>✓ If qualified, sends a direct calendar link for a 20-minute discovery call</li>
+                                <li>✓ Sends automated reminders at 24 hours and 1 hour before the call</li>
+                                <li>✓ If no response within 48 hours, follows up automatically twice more</li>
+                            </ul>
+                            <p class="cs-outcome-line"><strong>Week 3 result:</strong> Response time dropped from 4–6 hours to under 2 minutes. Confirmed meetings per week rose from 3 to 6.</p>
+                        </div>
+
+                        <div class="cs-phase">
+                            <h4>Phase 2 — Database Reactivation Campaign (Week 4–6)</h4>
+                            <p>We ran a structured, compliant reactivation campaign against the 847-contact dormant database, using a 4-message sequence over 14 days:</p>
+                            <ul>
+                                <li>✓ Message 1 — Re-introduction and current market commentary (day 1)</li>
+                                <li>✓ Message 2 — Relevant insight specific to their original enquiry topic (day 4)</li>
+                                <li>✓ Message 3 — Soft offer of a no-obligation 15-minute chat (day 9)</li>
+                                <li>✓ Message 4 — Final check-in with calendar link (day 14)</li>
+                                <li>✓ All replies and bookings routed directly into James's calendar</li>
+                            </ul>
+                            <p class="cs-outcome-line"><strong>30-day result:</strong> 23 appointments booked from 847 contacts (2.7% conversion). 6 converted to new clients within 60 days, representing £1.2M in new AUM.</p>
+                        </div>
+
+                        <div class="cs-phase">
+                            <h4>Phase 3 — Celebrity Advisor Framework (Week 5–8)</h4>
+                            <p>James spent one afternoon at a local studio. We filmed 90 minutes of raw footage covering James's views on retirement planning, protection, pension transfers, and market outlook. From that single session:</p>
+                            <ul>
+                                <li>✓ AI cloned James's voice, tone, and on-camera mannerisms</li>
+                                <li>✓ 24 professional short-form videos were generated and edited</li>
+                                <li>✓ Videos were scheduled across LinkedIn and Instagram for 90 days</li>
+                                <li>✓ Geo-targeted ads ran to HNW individuals within 15 miles of Birmingham</li>
+                                <li>✓ Every video ended with a direct link to book a discovery call</li>
+                            </ul>
+                            <p class="cs-outcome-line"><strong>60-day result:</strong> 4 inbound enquiries from prospects who said they had been watching James's content for weeks. One became a client with £900k AUM.</p>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="case-results">
+                        <h3>Results: The Numbers at 90 Days</h3>
+                        <div class="results-grid">
+                            <div class="result">
+                                <span class="result-metric">£2.1M</span>
+                                <span class="result-label">New AUM Added</span>
+                                <p>7 new HNW clients across all three systems</p>
+                            </div>
+                            <div class="result">
+                                <span class="result-metric">23</span>
+                                <span class="result-label">DBR Appointments</span>
+                                <p>Booked from a list James had given up on</p>
+                            </div>
+                            <div class="result">
+                                <span class="result-metric">11 hrs</span>
+                                <span class="result-label">Saved Every Week</span>
+                                <p>Admin, follow-ups, and scheduling now automated</p>
+                            </div>
+                            <div class="result">
+                                <span class="result-metric">2 min</span>
+                                <span class="result-label">Speed-to-Lead</span>
+                                <p>Down from 4–6 hours. No more lost referrals.</p>
+                            </div>
+                        </div>
+
+                        <blockquote class="case-quote">
+                            "I've been in practice for 14 years and I've never had a quarter like this. Three new clients from people who just watched my videos and called me. Six clients from leads I thought were dead. And I'm finishing work by 5pm now. DJITT didn't just fix my marketing — they gave me my life back."
+                            <footer>— James Aldridge, IFA, Heritage Wealth Planning</footer>
+                        </blockquote>
+
+                        <div class="cs-before-after">
+                            <div class="cs-before">
+                                <p class="cs-ba-label cs-red">Before</p>
+                                <ul>
+                                    <li>Losing referrals to faster-responding rivals</li>
+                                    <li>847 contacts gathering dust in a spreadsheet</li>
+                                    <li>2 videos in 18 months, invisible locally</li>
+                                    <li>12 hours/week on admin, reminders, follow-up</li>
+                                    <li>No predictable acquisition system</li>
+                                </ul>
+                            </div>
+                            <div class="cs-after">
+                                <p class="cs-ba-label cs-green">After</p>
+                                <ul>
+                                    <li>Every inbound enquiry handled in under 2 minutes</li>
+                                    <li>Dormant list converted to £1.2M in new AUM</li>
+                                    <li>24 videos/month — dominant local presence</li>
+                                    <li>1 hour/week on admin — rest runs automatically</li>
+                                    <li>Consistent, repeatable pipeline from three sources</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="case-outcome">
+                        <p><strong>Ongoing Partnership:</strong> Heritage Wealth Planning now runs all three systems on a monthly retainer. James has scheduled his next studio session to produce content for Q4. He has also referred two other IFAs in his network.</p>
+                        <p style="margin-top:0.5rem; font-weight:600; color:var(--primary);">At 1% management fee on £2.1M new AUM, James's annual recurring revenue from this 90-day window alone is £21,000 — before ongoing compounding.</p>
+                    </div>
+                </article>
+
+                <!-- ============================================================
+                     CASE STUDY 2 — Nexus Logistics
+                     ============================================================ -->
+                <article class="case-study">
+                    <div class="case-header">
+                        <h2>Nexus Logistics: £508,000 Annual Value Unlocked with Internal AI Systems</h2>
+                        <span class="industry-badge">Freight Forwarding</span>
+                    </div>
+
+                    <!-- Executive Summary Table -->
+                    <div class="cs-table-wrap">
+                        <h3>Executive Summary</h3>
+                        <div class="cs-table-scroll">
+                            <table class="cs-table">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>Before DJITT</th>
+                                        <th>After DJITT</th>
+                                        <th>Improvement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Sales team admin time</td>
+                                        <td>40% of the working week</td>
+                                        <td>15% of the working week</td>
+                                        <td class="cs-green">+25% selling time</td>
+                                    </tr>
+                                    <tr class="cs-row-alt">
+                                        <td>Support ticket resolution</td>
+                                        <td>4–8 minutes (manual)</td>
+                                        <td>80% answered instantly</td>
+                                        <td class="cs-green">−70% response time</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Document processing time</td>
+                                        <td>6 minutes per document</td>
+                                        <td>8 seconds per document</td>
+                                        <td class="cs-green">−98% processing time</td>
+                                    </tr>
+                                    <tr class="cs-row-alt">
+                                        <td>Monthly board reporting</td>
+                                        <td>3 days (COO + analyst)</td>
+                                        <td>2 hours (self-serve)</td>
+                                        <td class="cs-green">−92% reporting time</td>
+                                    </tr>
+                                    <tr class="cs-total">
+                                        <td>Annual value unlocked</td>
+                                        <td>—</td>
+                                        <td>£508,000</td>
+                                        <td class="cs-green">5× ROI in Year 1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="case-problem">
+                        <h3>The Challenge</h3>
+                        <div class="cs-meta">
+                            <span><strong>Company:</strong> Nexus Logistics</span>
+                            <span><strong>Industry:</strong> Freight Forwarding &amp; Logistics</span>
+                            <span><strong>Size:</strong> 150 employees, £45M revenue</span>
+                        </div>
+
+                        <p style="margin-top:1rem;">Sarah Chen, COO, discovered her team wasn't struggling with bad processes — they were drowning in manual work across four departments simultaneously:</p>
+
+                        <ul>
+                            <li><strong>Sales Team (5 reps):</strong> Spending 15–20 hours per week on research and email drafting rather than selling. Marcus, the team lead: <em>"I feel like a detective who never gets to make an arrest."</em></li>
+                            <li><strong>Support Team (4 agents):</strong> Answering the same 20 questions in rotation, dozens of times a day. Priya: <em>"I don't mind helping people. I mind saying the same thing twelve times a day."</em></li>
+                            <li><strong>Operations Team (3 clerks):</strong> Manually processing 50–80 shipping documents daily at 6 minutes each — 5 to 8 hours of solid data entry per person. David: <em>"My eyes are fine, but my soul is tired."</em></li>
+                            <li><strong>Leadership:</strong> COO spending 3 days every month assembling board reports from 5 disconnected systems.</li>
+                        </ul>
+                    </div>
+
+                    <div class="case-solution">
+                        <h3>Our Solution: Three AI Agent Systems in Two Phases</h3>
+
+                        <div class="cs-phase">
+                            <h4>Phase 1 — Sales Outreach Agent + Support Knowledge Agent (6 weeks)</h4>
+                            <ul>
+                                <li>✓ Sales agent learned from 12 months of best-performing emails; delivered 10–15 pre-researched leads with draft emails every morning</li>
+                                <li>✓ Reps went from 60% admin to 85% selling in week 4</li>
+                                <li>✓ Support agent ingested all documentation, 24 months of past tickets, and FAQs — generating instant draft answers with confidence scores</li>
+                                <li>✓ 80% of support tickets answered in under 30 seconds</li>
+                            </ul>
+                        </div>
+
+                        <div class="cs-phase">
+                            <h4>Phase 2 — Document Processing Swarm (8 weeks)</h4>
+                            <p>A swarm of six specialised agents working in sequence: Ingestion → Extraction → Validation → SAP Entry → Exception flagging → Audit logging. Result: 6 minutes per document became 8 seconds, with &lt;0.5% error rate and real-time clearing of what used to be a 2–3 day backlog.</p>
+                        </div>
+                    </div>
+
+                    <div class="case-results">
+                        <h3>Results</h3>
+                        <div class="results-grid">
+                            <div class="result">
+                                <span class="result-metric">£508k</span>
+                                <span class="result-label">Annual Value Unlocked</span>
+                                <p>250 hours saved per week across departments</p>
+                            </div>
+                            <div class="result">
+                                <span class="result-metric">5× ROI</span>
+                                <span class="result-label">First Year Return</span>
+                                <p>£100k investment → £508k value</p>
+                            </div>
+                            <div class="result">
+                                <span class="result-metric">&lt;3 mo</span>
+                                <span class="result-label">Payback Period</span>
+                                <p>Breaking even before Phase 2 completion</p>
+                            </div>
+                            <div class="result">
+                                <span class="result-metric">−98%</span>
+                                <span class="result-label">Document Processing</span>
+                                <p>6 minutes → 8 seconds per document</p>
+                            </div>
+                        </div>
+
+                        <blockquote class="case-quote">
+                            "DJITT didn't just give us tools. They gave us a strategy. They showed us that AI isn't about replacing people — it's about freeing them to do the work they were hired to do. My team actually enjoys their jobs again. That alone is worth more than the £500k."
+                            <footer>— Sarah Chen, Chief Operating Officer, Nexus Logistics</footer>
+                        </blockquote>
+                    </div>
+
+                    <div class="case-outcome">
+                        <p><strong>Ongoing Partnership:</strong> Now planning procurement automation, customer portal integration, and predictive analytics for shipping delays. Expanding to Finance and HR departments.</p>
+                        <p style="margin-top:0.5rem;"><strong>Why it worked:</strong> We started with process, not technology. Shadowed real people. Built with them, not for them. Started small, proved value, then scaled.</p>
+                    </div>
+                </article>
+
+            </div><!-- /case-studies-grid -->
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to See the Exact ROI AI Can Bring to Your Practice?</h2>
+            <p>Stop letting high-value clients slip to the advisor who simply calls back faster.</p>
+            <p class="no-obligation">No pressure. No obligation. Just a 15-minute conversation.</p>
+            <a href="https://api.leadconnectorhq.com/widget/booking/it5ll12Rwl5BCsdYC5SL" target="_blank" class="btn btn-primary">Book Your Free AI Systems Audit</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/DjittLogoAug122026.png" alt="DJITT" class="footer-logo">
+                    <p>Building Intelligent Systems That Scale Trust.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="index.html#services">Automated Client Acquisition</a></li>
+                        <li><a href="index.html#services">AI-Assisted Advisor Content</a></li>
+                        <li><a href="index.html#services">Database Reactivation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="case-studies.html">Case Studies</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-and-conditions.html">Terms &amp; Conditions</a></li>
+                        <li><a href="refund-cancellation.html">Refund &amp; Cancellation</a></li>
+                        <li><a href="cookie-policy.html">Cookie Policy</a></li>
+                        <li><a href="company-information.html">Company Information</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>DJITT LTD &mdash; Company No. 17105212 &mdash; Registered in England and Wales</p>
+                <p>&copy; 2026 DJITT LTD. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="script.js"></script>
+    <script src="structured-data.js"></script>
+    <script 
+      src="https://links.djitt.co.uk/js/external-tracking.js"
+      data-tracking-id="tk_4af1f64523884c37911e40f2cc896856">
+    </script>
+</body>
+</html>

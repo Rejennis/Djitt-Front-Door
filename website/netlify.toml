@@ -1,0 +1,75 @@
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/front-door/"
+  to = "/front-door.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/front-door"
+  to = "/front-door.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/services"
+  to = "/front-door.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/services.html"
+  to = "/front-door.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/case-studies.html"
+  to = "/websites/examples.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; frame-src 'self' https://links.djitt.co.uk https://api.leadconnectorhq.com; img-src 'self' data: https:; script-src 'self' https://links.djitt.co.uk https://api.leadconnectorhq.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.leadconnectorhq.com https://links.djitt.co.uk https://*.stripe.com; font-src 'self' data:; form-action 'self' https://api.leadconnectorhq.com https://links.djitt.co.uk; upgrade-insecure-requests"
+    X-Robots-Tag = "index,follow"
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/websites/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/resources/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/insights/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
