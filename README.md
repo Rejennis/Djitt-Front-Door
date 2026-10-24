@@ -45,6 +45,8 @@ The Playwright suite validates:
 - key CTA links are present and correctly routed
 - lead form required-field validation and a mocked successful submission
 - homepage and front-door accessibility smoke checks
+- services-to-front-door-to-website navigation and discovery-call CTA routing
+- services-page internal links, sections and loaded assets
 
 ## Notes
 - The site contains a third-party tracking script that triggers a CSP violation in the browser. This is treated as a known external-system condition rather than a functional regression in the live site.
