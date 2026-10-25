@@ -8,6 +8,26 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
-    "@playwright/test": "^1.64.1"
+    "@playwright/test": "^1.64.1",
+    "lighthouse": "^12.7.0",
+    "newman": "^6.2.0",
+    "vitest": "^3.2.4"
+  },
+  "scripts": {
+    "test:unit": "vitest run",
+    "test:smoke": "playwright test tests/smoke",
+    "test:regression": "playwright test tests/regression",
+    "test:integration": "playwright test tests/integration",
+    "test:api": "playwright test tests/api",
+    "test:a11y": "playwright test tests/accessibility",
+    "test:all": "playwright test",
+    "test:lighthouse": "lighthouse http://127.0.0.1:4173/ --output html --output json --output-path ./tests/reports/lighthouse/home --chrome-flags=\"--headless=new --no-sandbox\" --quiet",
+    "test:lighthouse:front-door": "lighthouse http://127.0.0.1:4173/front-door.html --output html --output json --output-path ./tests/reports/lighthouse/front-door --chrome-flags=\"--headless=new --no-sandbox\" --quiet",
+    "test:lighthouse:websites": "lighthouse http://127.0.0.1:4173/websites/ --output html --output json --output-path ./tests/reports/lighthouse/websites --chrome-flags=\"--headless=new --no-sandbox\" --quiet",
+    "test:lighthouse:budget": "node tests/helpers/report-utils/check-lighthouse.js",
+    "test:k6": "k6 run -e BASE_URL=http://127.0.0.1:4173 --summary-export tests/reports/k6/summary.json k6/djitt-homepage-load.js",
+    "test:load": "jmeter -n -t jmeter/djitt-website-load-test.jmx -l tests/reports/jmeter/results.jtl -e -o tests/reports/jmeter/html -f",
+    "test:postman": "newman run postman/DjittWebsite.postman_collection.json --reporters cli,junit --reporter-junit-export tests/reports/junit/postman.xml",
+    "test:security": "npm audit --omit=dev --audit-level=high"
   }
 }
